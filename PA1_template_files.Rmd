@@ -2,9 +2,16 @@
 title: "Repro. Research Project 1"
 author: "slauzon"
 date: "10/4/2020"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
+##Set up 
 
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, fig.width = 10, fig.height = 5, fig.keep = 'all', fig.path = 'figures\ ', dev = 'png')
+
+```
 ## Loading and preprocessing the data
 ## Unzip data to obtain a csv file.
 
@@ -28,9 +35,8 @@ Total_Steps <- activityDT[, c(lapply(.SD, sum, na.rm = FALSE)), .SDcols = c("ste
 head(Total_Steps, 10)
 ```
 
-## If you do not understand the difference between a histogram and a barplot, research the difference between them. Make a histogram of the total number of steps taken each day. 
 
-```{r Daily_step, echo=FALSE}
+```{r echo=FALSE}
 ggplot(Total_Steps, aes(x = steps)) +
     geom_histogram(fill = "blue", binwidth = 1000) +
     labs(title = "Daily Steps", x = "Steps", y = "Frequency")
