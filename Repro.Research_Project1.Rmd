@@ -13,12 +13,12 @@ library("data.table")
 library(ggplot2)
 fileUrl <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
 download.file(fileUrl, destfile = paste0(getwd(), '/repdata%2Fdata%2Factivity.zip'), method = "curl")
-unzip("repdata%2Fdata%2Factivity.zip",exdir = "data")
+unzip("repdata%2Fdata%2Factivity.zip",exdir = "PA1_template_files")
 ```
 
 ## Reading csv Data into Data.Table. 
 ```{r}
-activityDT <- data.table::fread(input = "data/activity.csv")
+activityDT <- data.table::fread(input = "PA1_template_files/activity.csv")
 ```
 
 ##1. Calculate the total number of steps taken per day
@@ -50,7 +50,7 @@ IntervalDT <- activityDT[, c(lapply(.SD, mean, na.rm = TRUE)), .SDcols = c("step
 ggplot(IntervalDT, aes(x = interval , y = steps)) + geom_line(color="blue", size=1) + labs(title = "Avg. Daily Steps", x = "Interval", y = "Avg. Steps per day")
 ```
 
-2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+##2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
 ```{r}
 IntervalDT[steps == max(steps), .(max_interval = interval)]
@@ -63,8 +63,6 @@ IntervalDT[steps == max(steps), .(max_interval = interval)]
 
 ```{r}
 activityDT[is.na(steps), .N ]
-# alternative solution
-nrow(activityDT[is.na(steps),])
 ```
 
 ##2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
@@ -77,7 +75,7 @@ activityDT[is.na(steps), "steps"] <- activityDT[, c(lapply(.SD, median, na.rm = 
 ##3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
 
 ```{r}
-data.table::fwrite(x = activityDT, file = "data/tidyData.csv", quote = FALSE)
+data.table::fwrite(x = activityDT, file = "PA1_template_files/Data.csv", quote = FALSE)
 ```
 
 ##4. Make a histogram of the total number of steps taken each day and calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
@@ -100,7 +98,7 @@ Second Part (fillin in na with median) | 9354.23 | 10395
 
 ```{r}
 # Just recreating activityDT from scratch then making the new factor variable. (No need to, just want to be clear on what the entire process is.) 
-activityDT <- data.table::fread(input = "data/activity.csv")
+activityDT <- data.table::fread(input = "PA1_template_files/activity.csv")
 activityDT[, date := as.POSIXct(date, format = "%Y-%m-%d")]
 activityDT[, `Day of Week`:= weekdays(x = date)]
 activityDT[grepl(pattern = "Monday|Tuesday|Wednesday|Thursday|Friday", x = `Day of Week`), "weekday or weekend"] <- "weekday"
